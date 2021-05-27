@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+<h:head>
+	<title>Aprendendo pfaces</title>
+</h:head>
+
+<h:body>
+
+	<h:form>
+		<p:breadCrumb>
+			<p:menuitem />
+			<p:menuitem value="index" action="index.jsf" />
+			<p:menuitem value="pagina jsf" action="primefaces.jsf"/>
+		</p:breadCrumb>
+	</h:form>
+
+	<br />
+	<br />
+
+<div class="Container">
+	<h:form id="formulario">
+	
+		<p:growl autoUpdate="true" showDetail="true"/>
+	
+		<fieldset>
+			<legend>Cadastro de Usuários</legend>
+		<div class="Container">
+		
+		<h:panelGrid columns="4" >
+			
+				
+				<p:outputLabel>Nome:</p:outputLabel>	
+				<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.nome}" style="width: 300px"/>
+					
+			
+				<p:outputLabel>sobrenome:</p:outputLabel>
+				<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.sobrenome}" style="width: 300px"/>	
+			
+						
+				<p:outputLabel>idade:</p:outputLabel>
+				<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.idade}" style="width: 80px" />
+		
+		
+				<p:outputLabel>Salario:</p:outputLabel>
+				<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.salario}" style="width: 80px" />
+	
+				
+				<p:outputLabel>sexo:</p:outputLabel> 
+					<p:selectOneMenu value="#{usuarioPessoaManagedBean.usuarioPessoa.sexo}" style="width: 150px" >
+						<f:selectItem itemValue="" itemLabel="--selecione--" noSelectionOption="true"/>
+						<f:selectItem itemValue="MASCULINO" itemLabel="Masculino"/>
+						<f:selectItem itemValue="FEMININO" itemLabel="Feminio"/> 
+					</p:selectOneMenu>
+					
+				
+				<p:outputLabel value="CEP:"/>
+				<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.cep}">
+					<f:ajax event="blur" execute="@this" listener="#{usuarioPessoaManagedBean.pesquisaCep}" 
+					render="logradouro complemento bairro localidade uf"/>
+				</p:inputText>
+				
+				
+				<p:outputLabel value="logradouro:"/>
+				<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.logradouro}" id="logradouro" style="width: 300px"/>
+				
+				<p:outputLabel value="Complemento"/>
+				<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.complemento}" id="complemento" style="width: 100px"/>	
+				
+				<p:outputLabel value="Bairro:"/>
+				<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.bairro}" id="bairro" style="width: 200px"/>		
+				
+				<p:outputLabel value="Localidade"/>
+				<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.localidade}" id="localidade" style="width: 200px"/>	
+				
+				<p:outputLabel value="Estado"/>
+				<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.uf}" id="uf" style="width: 50px"/>
+				
+	
+				<p:outputLabel>login:</p:outputLabel>
+				<p:inputText value="#{usuarioPessoaManagedBean.usuarioPessoa.login}" style="width: 100px" />
+	
+				<p:outputLabel>senha:</p:outputLabel>
+				<p:password value="#{usuarioPessoaManagedBean.usuarioPessoa.senha}" style="width: 100px" /> 
+				
+				
+				
+				<p:outputLabel>Foto:</p:outputLabel>
+				<p:fileUpload  mode="advanced" label="Adicionar" skinSimple="true" auto="true" process="@this" update="imagem" listener="#{usuarioPessoaManagedBean.upload}"/>                      
+				<h:outputLabel>Imagem:</h:outputLabel>
+				<h:graphicImage id="imagem" value="#{usuarioPessoaManagedBean.usuarioPessoa.imagem}" width="200" height="200"/>
+  
+
+
+
+		</h:panelGrid>
+		
+		<br />
+		
+		<p:commandButton value="salvar" ajax="false" action="#{usuarioPessoaManagedBean.salvar}" style="margin: 0 12px" />
+		<p:commandButton value="atualizar" ajax="false" action="#{usuarioPessoaManagedBean.atualizar}" style="margin: 0 15px" />
+		<p:commandButton value="novo" ajax="false" action="#{usuarioPessoaManagedBean.novo}"/>
+		</div>
+</fieldset>
+	</h:form>
+
+
+	<br />
+	<br />
+	
+	<h:form>
+	
+		<p:panel header="Consultar usuario">		
+			<h:panelGrid columns="3">
+				<h:outputLabel value="Nome:" />
+				<p:inputText value="#{usuarioPessoaManagedBean.campoPesquisa}" />
+				<p:commandButton value="Buscar" actionListener="#{usuarioPessoaManagedBean.pesquisar}" update="formtable, :graf"/>
+			</h:panelGrid>
+		</p:panel>
+	
+	</h:form>
+	
+	<br />
+	<br />
+	
+	<h:form id="formtable">
+    
+        <p:dataTable var="user" value="#{usuarioPessoaManagedBean.list}" id="idlist" 
+        			 rows="5" paginator="true" lazy="true"
+                     paginatorPosition="botton"
+                     paginatorTemplate="{FirstPageLink} {PageLinks} {LastPageLink}">
+
+                     
+            <p:column headerText="Id">
+                <h:outputText value="#{user.id}" width="20"/>
+            </p:column>
+
+            <p:column headerText="Name">
+                <h:outputText value="#{user.nome}" />
+            </p:column>      
+            
+            <p:column headerText="Sexo">
+                <h:outputText value="#{user.sexo}" />
+            </p:column>
+            
+            <p:column headerText="Foto">
+            	<h:commandLink value="" immediate="true" actionListener="#{usuarioPessoaManagedBean.download}">
+					<h:graphicImage width="60" height="60" value="#{user.imagem}"></h:graphicImage>
+            		<f:param name="fileDownloadId" value="#{user.id}" />
+            	</h:commandLink>
+			</p:column>
+            
+            
+            <p:column headerText="Editar" style="width:6rem" >            
+				<h:commandLink>
+					<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}" />
+					<h:graphicImage value="resources/img/edit.png"/>
+				</h:commandLink>           
+            </p:column>
+            
+            <p:column headerText="Delete">
+         
+				<h:commandLink action="#{usuarioPessoaManagedBean.remover}" immediate="true" update="idlist">
+					<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}" id="botaoremover"/>
+					<h:graphicImage value="resources/img/delete.png"/>
+					<f:ajax execute="botaoremover" render="idlist"/>
+				</h:commandLink>
+            </p:column> 
+            
+            <p:column>
+				<f:facet name="header" >Telefone</f:facet>
+				<h:commandLink immediate="true" action="telefone.jsf" id="botaofone">
+					<h:graphicImage value="resources/img/telefone.png"/>
+					<f:param name="codigouser" value="#{user.id}"/>
+				</h:commandLink>
+			</p:column>  
+			
+			<p:column headerText="E-mail">
+				<p:commandLink update=":formtable:dialogEmail" oncomplete="PF('dialogEmail').show()">
+					<f:setPropertyActionListener value="#{user}" target="#{usuarioPessoaManagedBean.usuarioPessoa}"/>
+					<h:graphicImage width="25" height="25" url="resources/img/email.png"/>
+				</p:commandLink>
+			</p:column>
+            
+        </p:dataTable>
+        
+        <!-- janela modal -->
+       	 <p:dialog header="Email" id="dialogEmail" widgetVar="dialogEmail" position="center" modal="true" width="490px"> 
+       	        	
+        	<h:panelGrid columns="3">
+        		<h:outputLabel value="Email"/>
+        		<p:inputText value="#{usuarioPessoaManagedBean.emailUser.email}" id="emailuseradd"/>
+        		<p:commandButton value="adicionar" actionListener="#{usuarioPessoaManagedBean.addEmail}" update="emailuseradd, dataTableEmail"></p:commandButton>
+        	</h:panelGrid>    
+        	
+        	<p:dataTable value="#{usuarioPessoaManagedBean.usuarioPessoa.emails}" var="email" id="dataTableEmail">
+        	
+        		<p:column headerText="Id">
+        			<h:outputLabel value="#{email.id}"/>
+        		</p:column>
+        		
+        		<p:column headerText="Email">
+        			<h:outputLabel value="#{email.email}"/>
+        		</p:column>     
+        		
+            	<p:column headerText="Delete" >
+				<h:commandLink id="botaoremoveremail" actionListener="#{usuarioPessoaManagedBean.removerEmail}">
+					<f:param name="codigoemail" value="#{email.id}"/>
+					<f:ajax execute="botaoremoveremail" render="dataTableEmail"/> <!-- atualizar a tela -->
+					<h:graphicImage value="resources/img/delete.png"/>
+				</h:commandLink>
+            	</p:column>         		   	
+        			
+        	</p:dataTable>
+        	    	
+        </p:dialog>
+        
+   
+</h:form>
+
+	<p:chart type="bar" model="#{usuarioPessoaManagedBean.barChartModel}" id="graf"/>
+</div>
+
+
+</h:body>
+</html>

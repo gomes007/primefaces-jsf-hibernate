@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+<h:head>
+	<title>Cadastro</title>
+</h:head>
+
+<h:body>
+
+	<h:form>
+		<p:breadCrumb>
+			<p:menuitem />
+			<p:menuitem value="index" action="index.jsf" />
+			<p:menuitem value="pagina jsf" action="primefaces.jsf" />
+		</p:breadCrumb>
+	</h:form>
+
+	<br />
+	<br />
+
+<div>
+	<h:form id="formulario">
+	
+		<p:growl autoUpdate="true" showDetail="true"/>
+	
+		<div class="card">
+		<h2>Cadastro</h2>
+		<h:panelGrid columns="2">
+							
+			<p:outputLabel value="Nome:"/>
+			<p:inputText value="#{pessoaBean.pessoa.nome}" style="width: 300px"/>
+			
+			<p:outputLabel value="Salario"/>
+			<p:inputText value="#{pessoaBean.pessoa.salario}" style="width: 100px"/>			
+				
+			<p:outputLabel value="Sexo:"/>
+			<p:selectOneRadio value="#{pessoaBean.pessoa.sexo}">
+				<f:selectItem itemValue="M" itemLabel="Masculino"/>
+				<f:selectItem itemValue="F" itemLabel="Feminino"/>
+			</p:selectOneRadio>
+			
+			
+		</h:panelGrid>
+		
+		<br />
+		
+		<p:commandButton value="salvar" ajax="false" action="#{pessoaBean.salvar}" style="margin: 0 12px" />
+		<p:commandButton value="atualizar" ajax="false" action="#{pessoaBean.atualizar}" style="margin: 0 15px" />
+		<p:commandButton value="novo" ajax="false" action="#{pessoaBean.novo}"/>
+		</div>
+	</h:form>
+</div>
+	
+	<br />
+	<br />
+	
+	<h:form id="formtable">
+    
+        <p:dataTable var="pessoa" value="#{pessoaBean.list}" id="pessoalist"> <!-- value vem de uma lista -->
+            <p:column headerText="Id" width="20">
+                <h:outputText value="#{pessoa.id}"/>
+            </p:column>
+
+            <p:column headerText="Name">
+                <h:outputText value="#{pessoa.nome}" />
+            </p:column>      
+            
+            <p:column headerText="Salario">
+                <h:outputText value="#{pessoa.salario}" />
+            </p:column>            
+            
+            <p:column headerText="Sexo">
+                <h:outputText value="#{pessoa.sexo}" />
+            </p:column>
+            
+            
+            <p:column headerText="Editar">
+            
+				<h:commandLink>
+					<f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}" />
+					<h:graphicImage value="resources/img/edit.png"/>
+				</h:commandLink>
+           
+            </p:column>
+            
+            <p:column headerText="Delete" >
+            
+				<h:commandLink action="#{pessoaBean.removerPessoa}" immediate="true" update="pessoalist">
+					<f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}" id="botaoremover"/>
+					<h:graphicImage value="resources/img/delete.png"/>
+					<f:ajax execute="botaoremover" render="pessoalist"/>
+				</h:commandLink>
+           
+            </p:column>
+            
+            <p:column headerText="Telefone">
+            
+				<p:commandLink update=":formtable:dialogFone" oncomplete="PF('dialogFone').show()">
+					<f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}"/>
+					<h:graphicImage width="25" height="25" url="resources/img/telefone.png"/>
+				</p:commandLink>
+	
+			</p:column>
+
+        </p:dataTable>
+        
+        <!-- janela modal -->
+       	 <p:dialog header="Fone" id="dialogFone" widgetVar="dialogFone" position="center" modal="true" width="490px" > 
+       	 
+       	 	<h:panelGrid columns="2">
+       	 	
+        		<h:outputLabel value="Fone:"/>
+        		<p:inputText value="#{pessoaBean.telefone.numero}" id="foneuseradd"/>
+        		
+        		<h:outputLabel value="Tipo:"/>
+        			<p:selectOneMenu value="#{pessoaBean.telefone.tipo}" style="width: 150px" id="tipouseradd">
+						<f:selectItem itemValue="" itemLabel="--selecione--" noSelectionOption="true"/>
+						<f:selectItem itemValue="Celular" itemLabel="Celular"/>
+						<f:selectItem itemValue="Casa" itemLabel="Casa"/> 
+						<f:selectItem itemValue="Recado" itemLabel="Recado"/> 
+					</p:selectOneMenu>
+        		        		
+        		<p:commandButton value="adicionar" actionListener="#{pessoaBean.addFone}" update="foneuseradd, dataTablefone, tipouseradd"></p:commandButton>
+        		<p:commandButton value="atualizar" ajax="false" action="#{pessoaBean.atualizarFone}" style="margin: 0 15px" />
+        		
+        	</h:panelGrid>
+        	
+        	<p:dataTable value="#{pessoaBean.pessoa.telefone}" var="fone" id="dataTablefone"> <!-- no value passa a lista telefones q esta na classe pessoa -->
+        	
+        		<p:column headerText="Id" width="20">
+        			<h:outputLabel value="#{fone.id}"/>
+        		</p:column>
+        		
+        		<p:column headerText="Numero">
+        			<h:outputLabel value="#{fone.numero}"/>
+        		</p:column>
+        		
+        		<p:column headerText="Tipo"> 
+					<h:outputLabel value="#{fone.tipo}"/>
+				</p:column>
+				
+			<p:column headerText="Editar" style="width:6rem" >            
+				<h:commandLink>
+					<f:setPropertyActionListener value="#{fone}" target="#{pessoaBean.telefone}" />
+					<h:graphicImage value="resources/img/edit.png"/>
+				</h:commandLink>           
+            </p:column>
+        		        		
+        		<p:column headerText="Apagar Registro" >
+				<h:commandLink id="botaoremoverfone" actionListener="#{pessoaBean.removerFone}" >
+					<f:param name="codigofone" value="#{fone.id}"/>
+					<f:ajax execute="botaoremoverfone" render="dataTablefone"/> <!-- atualizar a tela -->
+					<h:graphicImage value="resources/img/delete.png"/>
+				</h:commandLink>
+            	</p:column>
+     
+        	</p:dataTable>
+        	        	
+       	 </p:dialog>
+        
+
+</h:form>
+
+		<p:chart type="bar" model="#{pessoaBean.barChartModel}"/>
+
+
+</h:body>
+</html>
